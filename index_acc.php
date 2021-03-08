@@ -1,3 +1,7 @@
+<?php
+    require_once ('dbhelp.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +10,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mua bán máy tính, phụ kiện máy tính các loại</title>
     <style type=text/css>
-        /* viết css, màu giao diện */
+        .panel {
+            min-height: 100vh;
+            width: 100%;
+            background-image: url('image/background2(1).jpg');
+            background-repeat: no-repeat;
+            padding: 10px;
+            background-position:center top;
+            background-attachment:fixed;
+            background-size: auto;
+        }
+        .panel-heading {
+            font-size: 50px;
+            font-weight: bold;
+            color: gold ;
+            display: block;
+            text-align: center;
+        }
+        .panel-bodying {
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 25px;
+            color: gold ;
+        }
+        .btn-normal {
+            font-size: 25px;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            background-color: cyan;
+        }
+        .btn-next {
+            font-size: 24px;
+            background-color:indianred;
+            font-weight: bold;
+        }
+        .panel-bodying label {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 25px;
+            font-weight: bold;
+        }
+        .form-control {
+            width: 98%;
+            font-size: 25px;
+            font-weight: bold;
+        }
+        .btn-back {
+            font-size: 24px;
+            background-color: tomato;
+            font-weight: bold;
+        }
+        .table {
+            width: 100%;
+            border: greenyellow 3px;
+            border-style: solid;
+            color: greenyellow;
+        }
+        .table th {
+            border: solid greenyellow 1px;
+        }
+        .btn-save {
+            font-size: 25px;
+            font-weight: bold;
+            background-color: greenyellow;
+        }
     </style>
 </head>
 <body>
@@ -15,20 +85,71 @@
         <div class="panel-heading">Tìm Kiếm Phụ Kiện Máy Tính</div>
         <div class="panel-bodying">
             <label for="name_pro">Tên Sản Phẩm</label>
-            <input class="form-control" type="text" name="name_pro" id="name_pro" placeholder="Tìm theo tên">
         </div>
-        <div>
+        <div class="panel-bodying">
+            <input class="form-control" type="text" name="name_acc" id="name_acc" placeholder="Tìm theo tên">
+        </div>
+        <div class="panel-bodying">
             <label>Tìm Theo Hãng</label>
-            <select id="firm_acc">
+        </div>
+        <div class="panel-bodying">
+            <select class="form-control" id="firm_acc" name="firm_acc">
                 <option value="">--Chọn Hãng--</option>
+<?php
+    $spl = 'SELECT DISTINCT firm_acc FROM accessories';
+    $firm_accList = executeResult($spl);
+
+    foreach ($firm_accList as $item) {
+        echo '<option value="'.$item['firm_acc'].'">'.$item['firm_acc'].'</option>';
+    }
+?>
             </select>
+        </div>
+        <div class="panel-bodying">
+            <button class="btn-normal" onclick="find()" style="margin-left: 550px;">Tìm</button>
+        </div>
+        <div class="panel-heading">Danh Sách Tìm Kiếm</div>
+        <div class="panel-bodying">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Mã SP</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Ảnh</th>
+                        <th>Giá</th>
+                        <th>Hãng</th>
+                        <th>Sản Xuất</th>
+                        <th>Thông tin Chi Tiết</th>
+                        <th></th>
+                    </tr>
+                    <tbody>
+<?php
+$spl = 'SELECT * FROM accessories';
+$accList = executeResult($spl);
+$index=1;
+foreach ($accList as $acc) {
+    echo '<tr>
+            <th style="font-size: 16px">'.($index++).'</th>
+            <th style="font-size: 16px">'.$acc['name_acc'].'</th>
+            <th><img src="'.$acc['img_acc'].'" style="max-width: 150px"></th>
+            <th style="font-size: 16px">'.number_format($acc['price_acc']).'</th>
+            <th style="font-size: 16px">'.$acc['firm_acc'].'</th>
+            <th style="font-size: 16px">'.$acc['maker_acc'].'</th>
+            <th style="font-size: 14px">'.$acc['detail_acc'].'</th>
+            <th><button class="btn-save">Mua</button></th>
+        </tr>';
+}
+?>                        
+                    </tbody>
+                </thead>
+            </table>
         </div>
         <div class="panel-end">
             <form action="index.php">
-                <button class="btn_back" type="submit">Quay Lại Trang Chủ</button>
+                <button class="btn-back" type="submit" style="margin-left: 150px;">Quay Lại Trang Chủ</button>
             </form>
             <form action="cart.php">
-                <button class="btn-next" type="submit">Giỏ Hàng</button>
+                <button class="btn-next" type="submit" style="margin-left: 1200px;">Giỏ Hàng</button>
             </form>
         </div>
     </div>
