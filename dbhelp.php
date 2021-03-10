@@ -34,3 +34,17 @@ function executeResult($sql) {
 
 	return $list;
 }
+
+function executeSingleResult($sql) {
+	//create connection toi database
+	$conn = mysqli_connect(HOST, USERNAME, PASSWORD, DATABASE);
+
+	//query
+	$resultset = mysqli_query($conn, $sql);
+	$row = mysqli_fetch_array($resultset, 1);
+	
+	//dong connection
+	mysqli_close($conn);
+
+	return $row;
+}

@@ -84,6 +84,9 @@
                         <th>Tên Sản Phẩm</th>
                         <th>Số Lượng</th>
                         <th>Giá</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     <th>Chi Phí Tổng</th>
                 </thead>

@@ -1,5 +1,16 @@
 <?php
-    require_once ('dbhelp.php');
+    $name_pc = $firm_pc = $price_pc = "";
+    if(!empty($_POST)) {
+        if (isset($_POST['name_pc'])) {
+            $name_pc = $_POST['name_pc'];
+        }
+        if (isset($_POST['firm_pc'])) {
+            $firm_pc = $_POST['firm_pc'];
+        }
+        if (isset($_POST['price_pc'])) {
+            $price_pc = $_POST['price_pc'];
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -83,42 +94,46 @@
     <!-- body sẽ gồm các thẻ div(dòng) để tạo giao diện -->
     <div class="panel">
         <div class="panel-heading">Tìm Kiếm Máy Tính</div>
-        <div class="panel-bodying">
-            <label for="name_pc" placeholder="Tìm theo tên">Tên Máy Tính</label>
-        </div>
-        <div class="panel-bodying">
-            <input class="form-control" type="text" name="name_pro" id="name_pro" placeholder="Tìm theo tên">
-        </div>
-        <div class="panel-bodying">
-            <label for="firm_pc">Tên Hãng của Máy Tính</label>
-        </div>
-        <div class="panel-bodying">
-            <select class="form-control" id="firm_pc" name="firm_pc">
-                <option value="">--Chọn hãng--</option>
-<?php
-    $spl = 'SELECT DISTINCT firm_pc FROM computer';
-    $firm_pcList = executeResult($spl);
-    foreach ($firm_pcList as $item) {
-        echo '<option value="'.$item['firm_pc'].'">'.$item['firm_pc'].'</option>';
-    }
-?>
-            </select>
-        </div>
-        <div class="panel-bodying">
-            <label for="price_pc">Giá</label>
-        </div>
-        <div class="panel-bodying">
-            <select class="form-control" id="price_pc" name="price_pc">
-                <option value="">--Chọn giá--</option>
-                <option value='1'>5,000,000 - 10,000,000</option>
-                <option value='2'>10,000,000 - 20,000,000</option>
-                <option value='3'>20,000,000 - 30,000,000</option>
-                <option value='4'>trên 30,000,000</option>
-            </select>
-        </div>
-        <div class="panel-bodying">
+        <form method="POST" action="">
+            <div class="panel-bodying">
+                <label for="name_pc" placeholder="Tìm theo tên">Tên Máy Tính</label>
+            </div>
+            <div class="panel-bodying">
+                <input class="form-control" type="text" name="name_pc" id="name_pc" placeholder="Tìm theo tên">
+            </div>
+            <div class="panel-bodying">
+                <label for="firm_pc">Tên Hãng của Máy Tính</label>
+            </div>
+            <div class="panel-bodying">
+                <select class="form-control" id="firm_pc" name="firm_pc">
+                    <option value="">--Chọn hãng--</option>
+    <?php
+        require_once ('dbhelp.php');
+        $spl = 'SELECT DISTINCT firm_pc FROM computer';
+        $firm_pcList = executeResult($spl);
+        foreach ($firm_pcList as $item) {
+            echo '<option value="'.$item['firm_pc'].'">'.$item['firm_pc'].'</option>';
+        }
+    ?>
+                </select>
+            </div>
+            <div class="panel-bodying">
+                <label for="price_pc">Giá</label>
+            </div>
+            <div class="panel-bodying">
+                <select class="form-control" id="price_pc" name="price_pc">
+                    <option value="">--Chọn giá--</option>
+                    <option value='1'>0 - 10,000,000</option>
+                    <option value='2'>10,000,000 - 20,000,000</option>
+                    <option value='3'>20,000,000 - 30,000,000</option>
+                    <option value='4'>30,000,000 - 40,000,000</option>
+                    <option value='5'>trên 40,000,000</option>
+                </select>
+            </div>
+            <div class="panel-bodying">
             <button class="btn-normal" onclick="find()" style="margin-left: 550px;">Tìm</button>
-        </div>
+            </div>
+        </form>
         <div class="panel-heading">Danh Sách Tìm Kiếm</div>
         <div class="panel-bodying">
             <table class="table">
@@ -127,16 +142,21 @@
                         <th>No</th>
                         <th>Tên Sản Phẩm</th>
                         <th>Ảnh</th>
-                        <th>Cấu Hình</th>
                         <th>Giá</th>
                         <th>Hãng</th>
-                        <th>Sản Xuất</th>
                         <th>Thông tin Chi Tiết</th>
                         <th></th>
                     </tr>
                     <tbody>
 <?php
-$spl = 'SELECT * FROM computer';
+require_once ('dbhelp.php');
+if(isset($_POST['price_pc']) && $price_pc != "") {
+    if (isset($_POST['price_pc']) && $price_pc == 5) {
+        $spl = 'SELECT * FROM web_maytinh.computer where name_pc like "%'.$name_pc.'%" and firm_pc like "%'.$firm_pc.'%" and price_pc > '.$price_pc.'*8000000';
+    }
+    else $spl = 'SELECT * FROM web_maytinh.computer where name_pc like "%'.$name_pc.'%" and firm_pc like "%'.$firm_pc.'%" and price_pc <= '.$price_pc.'*10000000 and price_pc >= '.$price_pc.'*10000000-10000000';
+}
+else $spl = 'SELECT * FROM web_maytinh.computer where name_pc like "%'.$name_pc.'%" and firm_pc like "%'.$firm_pc.'%"';
 $pcList = executeResult($spl);
 $index = 1;
 foreach ($pcList as $pc) {
@@ -144,10 +164,8 @@ foreach ($pcList as $pc) {
             <th style="font-size: 16px">'.($index++).'</th>
             <th style="font-size: 16px">'.$pc['name_pc'].'</th>
             <th><img src="'.$pc['img_pc'].'" style="max-width: 200px"></th>
-            <th style="font-size: 16px">'.$pc['config_pc'].'</th>
             <th style="font-size: 16px">'.number_format($pc['price_pc']).'</th>
             <th style="font-size: 16px">'.$pc['firm_pc'].'</th>
-            <th style="font-size: 16px">'.$pc['maker_pc'].'</th>
             <th style="font-size: 14px">'.$pc['detail_pc'].'</th>
             <th><button class="btn-save">Mua</button></th>
         </tr>';

@@ -1,5 +1,16 @@
 <?php
-    require_once('dbhelp.php');
+    $name_com = $firm_com = $kind_com = "";
+    if(!empty($_POST)) {
+        if (isset($_POST['name_com'])) {
+            $name_com = $_POST['name_com'];
+        }
+        if (isset($_POST['kind_com'])) {
+            $kind_com = $_POST['kind_com'];
+        }
+        if (isset($_POST['firm_com'])) {
+            $firm_com = $_POST['firm_com'];
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -83,36 +94,49 @@
     <!-- body sẽ gồm các thẻ div(dòng) để tạo giao diện -->
     <div class="panel">
         <div class="panel-heading">Tìm Kiếm Linh Kiện Máy Tính</div>
-        <div class="panel-bodying">
-            <label for="name_com">Tên Sản Phẩm</label>
-        </div>
-        <div class="panel-bodying">
-            <input class="form-control" type="text" name="name_com" id="name_com" placeholder="Tìm theo tên">
-        </div>
-        <div class="panel-bodying">
-            <label for="firm_com">Tên Hãng của Linh Kiện</label>
-        </div>
-        <div class="panel-bodying">
-            <select class="form-control" id="firm_com" name="firm_com">
-                <option value="">--Chọn Hãng--</option>
-<?php
-    $spl = 'SELECT DISTINCT firm_com FROM components';
-    $firm_comList = executeResult($spl);
-    foreach ($firm_comList as $item) {
-        echo '<option value="'.$item['firm_com'].'">'.$item['firm_com'].'</option>';
-    }
-?>
-            </select>
-        </div>
-        <div class="panel-bodying">
-            <label for="name_pc_com">Tên Máy Tính của Linh Kiện</label>
-        </div>
-        <div class="panel-bodying">
-            <input class="form-control" type="text" name="name_pc_com" id="name_pc_com" placeholder="Tìm Theo Tên của Máy Tính">
-        </div>
-        <div class="panel-bodying">
-            <button class="btn-normal" onclick="find()" style="margin-left: 550px;">Tìm</button>
-        </div>
+        <form method="POST" action="">
+            <div class="panel-bodying">
+                <label for="name_com">Tên Sản Phẩm</label>
+            </div>
+            <div class="panel-bodying">
+                <input class="form-control" type="text" name="name_com" id="name_com" placeholder="Tìm theo tên">
+            </div>
+            <div class="panel-bodying">
+                <label for="kind_com">Loại Linh Kiện</label>
+            </div>
+            <div class="panel-bodying">
+                <select class="form-control" id="kind_com" name="kind_com">
+                    <option value="">--Chọn Loại--</option>
+    <?php
+        require_once('dbhelp.php');
+        $spl = 'SELECT DISTINCT kind_com FROM components';
+        $firm_comList = executeResult($spl);
+        foreach ($firm_comList as $item) {
+            echo '<option value="'.$item['kind_com'].'">'.$item['kind_com'].'</option>';
+        }
+    ?>
+                </select>
+            </div>
+            <div class="panel-bodying">
+                <label for="firm_com">Tên Hãng của Linh Kiện</label>
+            </div>
+            <div class="panel-bodying">
+                <select class="form-control" id="firm_com" name="firm_com">
+                    <option value="">--Chọn Hãng--</option>
+    <?php
+        require_once('dbhelp.php');
+        $spl = 'SELECT DISTINCT firm_com FROM components';
+        $firm_comList = executeResult($spl);
+        foreach ($firm_comList as $item) {
+            echo '<option value="'.$item['firm_com'].'">'.$item['firm_com'].'</option>';
+        }
+    ?>
+                </select>
+            </div>
+            <div class="panel-bodying">
+                <button class="btn-normal" onclick="find()" style="margin-left: 550px;">Tìm</button>
+            </div>
+        </form>
         <div class="panel-heading">Danh Sách Tìm Kiếm</div>
         <div class="panel-bodying">
             <table class="table">
@@ -123,13 +147,13 @@
                         <th>Ảnh</th>
                         <th>Giá</th>
                         <th>Hãng</th>
-                        <th>Sản Xuất</th>
                         <th>Thông tin Chi Tiết</th>
                         <th></th>
                     </tr>
                     <tbody>
 <?php
-    $spl = 'SELECT * FROM components';
+    require_once('dbhelp.php');
+    $spl = 'SELECT * FROM web_maytinh.components where name_com like "%'.$name_com.'%" and firm_com like "%'.$firm_com.'%" and kind_com like "%'.$kind_com.'%"';
     $comList = executeResult($spl);
     $index = 1;
     foreach ($comList as $com) {
@@ -139,7 +163,6 @@
                 <th><img src="'.$com['img_com'].'" style="max-width: 150px"></th>
                 <th style="font-size: 16px">'.number_format($com['price_com']).'</th>
                 <th style="font-size: 16px">'.$com['firm_com'].'</th>
-                <th style="font-size: 16px">'.$com['maker_com'].'</th>
                 <th style="font-size: 14px">'.$com['detail_com'].'</th>
                 <th><button class="btn-save">Mua</button></th>
             </tr>';
