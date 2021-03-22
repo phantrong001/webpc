@@ -83,6 +83,9 @@
         .table th {
             border: solid greenyellow 1px;
         }
+        .table td {
+            border: solid greenyellow 1px;
+        }
         .btn-save {
             font-size: 25px;
             font-weight: bold;
@@ -158,16 +161,22 @@ require_once ('dbhelp.php');
 $spl = 'SELECT * FROM web_maytinh.accessories where name_acc like "%'.$name_acc.'%" and firm_acc like "%'.$firm_acc.'%" and kind_acc like "%'.$kind_acc.'%"';
 $accList = executeResult($spl);
 $index=1;
-foreach ($accList as $acc) {
-    echo '<tr>
-            <th style="font-size: 16px">'.($index++).'</th>
-            <th style="font-size: 16px">'.$acc['name_acc'].'</th>
-            <th><img src="'.$acc['img_acc'].'" style="max-width: 150px"></th>
-            <th style="font-size: 16px">'.number_format($acc['price_acc']).'</th>
-            <th style="font-size: 16px">'.$acc['firm_acc'].'</th>
-            <th style="font-size: 14px">'.$acc['detail_acc'].'</th>
-            <th><button class="btn-save">Mua</button></th>
-        </tr>';
+foreach ($accList as $acc) { ?>
+    <tr>
+        <td style="font-size: 16px"><?=$acc['id_acc']?></td>
+        <td style="font-size: 16px"><?=$acc['name_acc']?></td>
+        <td><img src="<?=$acc['img_acc']?>" style="max-width: 150px"></td>
+        <td style="font-size: 16px"><?=number_format($acc['price_acc'])?></td>
+        <td style="font-size: 16px"><?=$acc['firm_acc']?></td>
+        <td style="font-size: 14px"><?=$acc['detail_acc']?></td>
+        <form id="add-to-cart-form" action="cart.php?action=add" method="POST">
+            <td><input type="text" value="1" name="quantity[<?=$acc['id_acc']?>]" size="1"/></td>
+            <td>
+                <a href="cart.php?action=add"><button class="btn-save">Mua</button></a>
+            </td>
+        </form>
+    </tr>
+<?php
 }
 ?>                        
                     </tbody>

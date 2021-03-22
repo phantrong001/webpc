@@ -10,6 +10,7 @@
             min-height: 100vh;
             width: 100%;
             background-image: url('image/background2(1).jpg');
+            /* background-image: url('image/a.jpg'); */
             background-repeat: no-repeat;
             padding: 10px;
             background-position:center top;

@@ -83,6 +83,9 @@
         .table th {
             border: solid greenyellow 1px;
         }
+        .table td {
+            border: solid greenyellow 1px;
+        }
         .btn-save {
             font-size: 25px;
             font-weight: bold;
@@ -145,6 +148,7 @@
                         <th>Giá</th>
                         <th>Hãng</th>
                         <th>Thông tin Chi Tiết</th>
+                        <th>Số Lượng</th>
                         <th></th>
                     </tr>
                     <tbody>
@@ -158,17 +162,22 @@ if(isset($_POST['price_pc']) && $price_pc != "") {
 }
 else $spl = 'SELECT * FROM web_maytinh.computer where name_pc like "%'.$name_pc.'%" and firm_pc like "%'.$firm_pc.'%"';
 $pcList = executeResult($spl);
-$index = 1;
-foreach ($pcList as $pc) {
-    echo '<tr>
-            <th style="font-size: 16px">'.($index++).'</th>
-            <th style="font-size: 16px">'.$pc['name_pc'].'</th>
-            <th><img src="'.$pc['img_pc'].'" style="max-width: 200px"></th>
-            <th style="font-size: 16px">'.number_format($pc['price_pc']).'</th>
-            <th style="font-size: 16px">'.$pc['firm_pc'].'</th>
-            <th style="font-size: 14px">'.$pc['detail_pc'].'</th>
-            <th><button class="btn-save">Mua</button></th>
-        </tr>';
+foreach ($pcList as $pc) { ?>
+        <tr>
+            <td style="font-size: 16px"><?=$pc['id_pc']?></td>
+            <td style="font-size: 16px"><?=$pc['name_pc']?></td>
+            <td><img src="<?=$pc['img_pc']?>" style="max-width: 150px"></td>
+            <td style="font-size: 16px"><?=number_format($pc['price_pc'])?></td>
+            <td style="font-size: 16px"><?=$pc['firm_pc']?></td>
+            <td style="font-size: 14px"><?=$pc['detail_pc']?></td>
+            <form id="add-to-cart-form" action="cart.php?action=add" method="POST">
+                <td><input type="text" value="1" name="quantity[<?=$pc['id_pc']?>]" size="1"/></td>
+                <td>
+                    <a href="cart.php?action=add"><button class="btn-save">Mua</button></a>
+                </td>
+            </form>
+        </tr>
+<?php
 }
 ?>
                     </tbody>

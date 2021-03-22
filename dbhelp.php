@@ -15,6 +15,16 @@ function execute($sql) {
 	mysqli_close($conn);
 }
 
+function executeConn($sql) {
+	//create connection toi database
+	$conn = mysqli_connect(HOST, USERNAME, PASSWORD, DATABASE);
+
+	//query
+	mysqli_query($conn, $sql);
+	return $conn;
+	//dong connection
+	mysqli_close($conn);
+}
 /**
  * su dung cho lenh select => tra ve ket qua
  */

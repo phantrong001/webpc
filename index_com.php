@@ -83,6 +83,9 @@
         .table th {
             border: solid greenyellow 1px;
         }
+        .table td {
+            border: solid greenyellow 1px;
+        }
         .btn-save {
             font-size: 25px;
             font-weight: bold;
@@ -156,18 +159,24 @@
     $spl = 'SELECT * FROM web_maytinh.components where name_com like "%'.$name_com.'%" and firm_com like "%'.$firm_com.'%" and kind_com like "%'.$kind_com.'%"';
     $comList = executeResult($spl);
     $index = 1;
-    foreach ($comList as $com) {
-        echo '<tr>
-                <th style="font-size: 16px">'.($index++).'</th>
-                <th style="font-size: 16px">'.$com['name_com'].'</th>
-                <th><img src="'.$com['img_com'].'" style="max-width: 150px"></th>
-                <th style="font-size: 16px">'.number_format($com['price_com']).'</th>
-                <th style="font-size: 16px">'.$com['firm_com'].'</th>
-                <th style="font-size: 14px">'.$com['detail_com'].'</th>
-                <th><button class="btn-save">Mua</button></th>
-            </tr>';
+    foreach ($comList as $com) {?>
+        <tr>
+            <td style="font-size: 16px"><?=$com['id_com']?></td>
+            <td style="font-size: 16px"><?=$com['name_com']?></td>
+            <td><img src="<?=$com['img_com']?>" style="max-width: 150px"></td>
+            <td style="font-size: 16px"><?=number_format($com['price_com'])?></td>
+            <td style="font-size: 16px"><?=$com['firm_com']?></td>
+            <td style="font-size: 14px"><?=$com['detail_com']?></td>
+            <form id="add-to-cart-form" action="cart.php?action=add" method="POST">
+                <td><input type="text" value="1" name="quantity[<?=$com['id_com']?>]" size="1"/></td>
+                <td>
+                    <a href="cart.php?action=add"><button class="btn-save">Mua</button></a>
+                </td>
+            </form>
+        </tr>
+    <?php
     }
-?>
+    ?>                        
                     </tbody>
                 </thead>
             </table>

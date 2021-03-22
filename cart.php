@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,7 +48,6 @@
         .panel-bodying label {
             font-weight: bold;
             font-size: 25px;
-            font-weight: bold;
         }
         .form-control {
             width: 60%;
@@ -65,40 +66,163 @@
         .table th {
             border: solid gold 1px;
         }
+        .table td {
+            font-size: 20px;
+            color: rgb(71, 255, 163);
+            border: solid gold 1px;
+        }
         .btn-save {
             font-size: 24px;
             background-color: rgb(71, 255, 163);
             font-weight: bold;
+        }
+        .btn-del {
+            font-size: 24px;
+            background-color: red;
+            font-weight: bold;
+            color: black;
+            border: solid black 1px;
         }
     </style>
 </head>
 <body>
     <div class="panel">
         <div class="panel-heading">Giỏ Hàng Của Bạn</div>
-        <div class="panel-bodying">
-            <table class="table">
-                <thead>
+        <form id="cart-form" method = "POST" action = "cart.php?action=submit">
+            <div class="panel-bodying">
+                <table class="table">
                     <tr>
-                        <th>No</th>
-                        <th>Mã Sản Phẩm</th>
-                        <th>Tên Sản Phẩm</th>
-                        <th>Số Lượng</th>
-                        <th>Giá</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                            <th>No</th>
+                            <th>Tên Sản Phẩm</th>
+                            <th>Đơn Giá</th>
+                            <th>Số Lượng</th>
+                            <th>Thành Tiền</th>
+                            <th>&nbsp</th>
                     </tr>
-                    <th>Chi Phí Tổng</th>
-                </thead>
-                <tbody id="result">
+<?php
+    require_once ('dbhelp.php');
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = array();
+    }
+    if (isset($_GET['action'])) {
+        function updateData($add = false) {
+            foreach ($_POST['quantity'] as $id => $quantity) {
+                if ($quantity == 0) {
+                    unset($_SESSION["cart"][$id]);
+                } else {
+                    if ($add) {
+                        $_SESSION["cart"][$id] += $quantity;
+                    } else {
+                        $_SESSION["cart"][$id] = $quantity;
+                    }
+                }
+            }
+        }
+        switch ($_GET['action']) {
+            case "add" :
+                updateData(true);
+                header('Location: cart.php');
+                break;
+            case "delete" :
+                if(isset($_GET['id_pc'])) {
+                    unset($_SESSION["cart"][$_GET['id_pc']]);
+                } else if (isset($_GET['id_acc'])) {
+                    unset($_SESSION["cart"][$_GET['id_acc']]);
+                }
+                else if (isset($_GET['id_com'])) {
+                    unset($_SESSION["cart"][$_GET['id_com']]);
+                }
+                header('Location: cart.php');
+                break;
+            case "submit" :
+                if($_POST['update-click']) {
+                    updateData();
+                }
+                header('Location: cart.php');
+                break;
+        }
+    }
+    $quantity_ord = 0;
+    $total = 0;
+    $num = 1;
+    // $_SESSION['cart'] = array();
+    // var_dump($_SESSION["cart"]); exit;
+    foreach($_SESSION["cart"] as $index => $quan) {
+        if($index < 100) {
+            $sql = "SELECT * FROM web_maytinh.computer WHERE id_pc = $index";
+            $row = executeSingleResult($sql);
+?>
+            <tr>
+                <td><?=$num++;?></td>
+                <td><?=$row['name_pc']?></td>
+                <td><?=number_format($row['price_pc'])?></td>
+                <td><input type="text" value="<?=$_SESSION["cart"][$row['id_pc']]?>" name = "quantity[<?=$row['id_pc']?>]" size=1></td>
+                <td><?=number_format($row['price_pc'] * $_SESSION["cart"][$row['id_pc']])?></td>
+                <td>
+                    <a class="btn-del" href="cart.php?action=delete&id_pc=<?=$row['id_pc']?>">Xóa</a>
+                </td>
+            </tr>
+<?php
+            $total +=  $row['price_pc'] * $_SESSION["cart"][$row['id_pc']];
+            $quantity_ord += $_SESSION["cart"][$row['id_pc']];
+        }
+        if($index > 100 && $index < 200) {
+            $sql = "SELECT * FROM web_maytinh.accessories WHERE id_acc = $index";
+            $row = executeSingleResult($sql);
+?>
+            <tr>
+                <td><?=$num++;?></td>
+                <td><?=$row['name_acc']?></td>
+                <td><?=number_format($row['price_acc'])?></td>
+                <td><input type="text" value="<?=$_SESSION["cart"][$row['id_acc']]?>" name = "quantity[<?=$row['id_acc']?>]" size=1></td>
+                <td><?=number_format($row['price_acc'] * $_SESSION["cart"][$row['id_acc']])?></td>
+                <td>
+                    <a class="btn-del" href="cart.php?action=delete&id_acc=<?=$row['id_acc']?>">Xóa</a>
+                </td>
+            </tr>
+<?php
+            $total +=  $row['price_acc'] * $_SESSION["cart"][$row['id_acc']];
+            $quantity_ord += $_SESSION["cart"][$row['id_acc']];
+        }
+        if($index > 200) {
+            $sql = "SELECT * FROM web_maytinh.components WHERE id_com = $index";
+            $row = executeSingleResult($sql);
+?>
+            <tr>
+                <td><?=$num++;?></td>
+                <td><?=$row['name_com']?></td>
+                <td><?=number_format($row['price_com'])?></td>
+                <td><input type="text" value="<?=$_SESSION["cart"][$row['id_com']]?>" name = "quantity[<?=$row['id_com']?>]" size=1></td>
+                <td><?=number_format($row['price_com'] * $_SESSION["cart"][$row['id_com']])?></td>
+                <td>
+                    <a class="btn-del" href="cart.php?action=delete&id_com=<?=$row['id_com']?>">Xóa</a>
+                </td>
+            </tr>
+<?php
+            $total +=  $row['price_com'] * $_SESSION["cart"][$row['id_com']];
+            $quantity_ord += $_SESSION["cart"][$row['id_com']];
+        }    
+    }
     
-                </tbody>
-            </table>
-        </div>
-        <div class="panel-end">
-            <form action="form.php">
+?>
+                    <tr id="row-total">
+                        <td>&nbsp</td>
+                        <td>Tổng Chi Phí</td>
+                        <td>&nbsp</td>
+                        <td><?=number_format($total)?></td>
+                        <td>&nbsp</td>
+                        <td>&nbsp</td>
+                    </tr>
+                </table>
+            </div>
+            <div class = "panel-end">
+                <input class="btn-save" type = "submit" name = "update-click" value = "Cập Nhật" style="margin-left: 1050px; margin-top:20px;"/>
+            </div>
+        </form>
+        <div class="back-form">
+            <a href="form.php?action=save&quantity_ord=<?=$quantity_ord?>&total_ord=<?=$total?>">
                 <button class="btn-save" type="submit" style="margin-left: 1050px; margin-top:20px;">Tạo Hóa Đơn và Thanh Toán</button>
-            </form>
+            </a>
         </div>
         <div class="panel-end">
             <form action="index.php">
