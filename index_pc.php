@@ -112,7 +112,7 @@
                     <option value="">--Chọn hãng--</option>
     <?php
         require_once ('dbhelp.php');
-        $spl = 'SELECT DISTINCT firm_pc FROM computer';
+        $spl = 'SELECT DISTINCT firm_pc FROM kDAbiPc3dp.computer';
         $firm_pcList = executeResult($spl);
         foreach ($firm_pcList as $item) {
             echo '<option value="'.$item['firm_pc'].'">'.$item['firm_pc'].'</option>';
@@ -156,11 +156,11 @@
 require_once ('dbhelp.php');
 if(isset($_POST['price_pc']) && $price_pc != "") {
     if (isset($_POST['price_pc']) && $price_pc == 5) {
-        $spl = 'SELECT * FROM web_maytinh.computer where name_pc like "%'.$name_pc.'%" and firm_pc like "%'.$firm_pc.'%" and price_pc > '.$price_pc.'*8000000';
+        $spl = 'SELECT * FROM kDAbiPc3dp.computer where name_pc like "%'.$name_pc.'%" and firm_pc like "%'.$firm_pc.'%" and price_pc > '.$price_pc.'*8000000';
     }
-    else $spl = 'SELECT * FROM web_maytinh.computer where name_pc like "%'.$name_pc.'%" and firm_pc like "%'.$firm_pc.'%" and price_pc <= '.$price_pc.'*10000000 and price_pc >= '.$price_pc.'*10000000-10000000';
+    else $spl = 'SELECT * FROM kDAbiPc3dp.computer where name_pc like "%'.$name_pc.'%" and firm_pc like "%'.$firm_pc.'%" and price_pc <= '.$price_pc.'*10000000 and price_pc >= '.$price_pc.'*10000000-10000000';
 }
-else $spl = 'SELECT * FROM web_maytinh.computer where name_pc like "%'.$name_pc.'%" and firm_pc like "%'.$firm_pc.'%"';
+else $spl = 'SELECT * FROM kDAbiPc3dp.computer where name_pc like "%'.$name_pc.'%" and firm_pc like "%'.$firm_pc.'%"';
 $pcList = executeResult($spl);
 foreach ($pcList as $pc) { ?>
         <tr>

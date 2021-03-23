@@ -149,7 +149,7 @@
     // var_dump($_SESSION["cart"]); exit;
     foreach($_SESSION["cart"] as $index => $quan) {
         if($index < 100) {
-            $sql = "SELECT * FROM web_maytinh.computer WHERE id_pc = $index";
+            $sql = "SELECT * FROM kDAbiPc3dp.computer WHERE id_pc = $index";
             $row = executeSingleResult($sql);
 ?>
             <tr>
@@ -167,7 +167,7 @@
             $quantity_ord += $_SESSION["cart"][$row['id_pc']];
         }
         if($index > 100 && $index < 200) {
-            $sql = "SELECT * FROM web_maytinh.accessories WHERE id_acc = $index";
+            $sql = "SELECT * FROM kDAbiPc3dp.accessories WHERE id_acc = $index";
             $row = executeSingleResult($sql);
 ?>
             <tr>
@@ -185,7 +185,7 @@
             $quantity_ord += $_SESSION["cart"][$row['id_acc']];
         }
         if($index > 200) {
-            $sql = "SELECT * FROM web_maytinh.components WHERE id_com = $index";
+            $sql = "SELECT * FROM kDAbiPc3dp.components WHERE id_com = $index";
             $row = executeSingleResult($sql);
 ?>
             <tr>

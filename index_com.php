@@ -112,7 +112,7 @@
                     <option value="">--Chọn Loại--</option>
     <?php
         require_once('dbhelp.php');
-        $spl = 'SELECT DISTINCT kind_com FROM components';
+        $spl = 'SELECT DISTINCT kind_com FROM kDAbiPc3dp.components';
         $firm_comList = executeResult($spl);
         foreach ($firm_comList as $item) {
             echo '<option value="'.$item['kind_com'].'">'.$item['kind_com'].'</option>';
@@ -128,7 +128,7 @@
                     <option value="">--Chọn Hãng--</option>
     <?php
         require_once('dbhelp.php');
-        $spl = 'SELECT DISTINCT firm_com FROM components';
+        $spl = 'SELECT DISTINCT firm_com FROM kDAbiPc3dp.components';
         $firm_comList = executeResult($spl);
         foreach ($firm_comList as $item) {
             echo '<option value="'.$item['firm_com'].'">'.$item['firm_com'].'</option>';
@@ -156,7 +156,7 @@
                     <tbody>
 <?php
     require_once('dbhelp.php');
-    $spl = 'SELECT * FROM web_maytinh.components where name_com like "%'.$name_com.'%" and firm_com like "%'.$firm_com.'%" and kind_com like "%'.$kind_com.'%"';
+    $spl = 'SELECT * FROM kDAbiPc3dp.components where name_com like "%'.$name_com.'%" and firm_com like "%'.$firm_com.'%" and kind_com like "%'.$kind_com.'%"';
     $comList = executeResult($spl);
     $index = 1;
     foreach ($comList as $com) {?>

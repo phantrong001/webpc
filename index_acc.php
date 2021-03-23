@@ -112,7 +112,7 @@
                     <option value="">--Chọn Loại--</option>
     <?php
         require_once ('dbhelp.php');
-        $spl = 'SELECT DISTINCT kind_acc FROM accessories';
+        $spl = 'SELECT DISTINCT kind_acc FROM kDAbiPc3dp.accessories';
         $firm_accList = executeResult($spl);
 
         foreach ($firm_accList as $item) {
@@ -129,7 +129,7 @@
                     <option value="">--Chọn Hãng--</option>
     <?php
         require_once ('dbhelp.php');
-        $spl = 'SELECT DISTINCT firm_acc FROM accessories';
+        $spl = 'SELECT DISTINCT firm_acc FROM kDAbiPc3dp.accessories';
         $firm_accList = executeResult($spl);
 
         foreach ($firm_accList as $item) {
@@ -158,7 +158,7 @@
                     <tbody>
 <?php
 require_once ('dbhelp.php');
-$spl = 'SELECT * FROM web_maytinh.accessories where name_acc like "%'.$name_acc.'%" and firm_acc like "%'.$firm_acc.'%" and kind_acc like "%'.$kind_acc.'%"';
+$spl = 'SELECT * FROM kDAbiPc3dp.accessories where name_acc like "%'.$name_acc.'%" and firm_acc like "%'.$firm_acc.'%" and kind_acc like "%'.$kind_acc.'%"';
 $accList = executeResult($spl);
 $index=1;
 foreach ($accList as $acc) { ?>
